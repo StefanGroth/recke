@@ -5,7 +5,7 @@ const parser = require('./command-parser.js')
 
 var config = {
   prefix: '!reck',
-  restrictedTo: []
+  restrictedTo: new Set()
 }
 
 var recommendations = {
@@ -16,8 +16,11 @@ var recommendations = {
 
 client.on('ready', () => {
 
-  const readConfig = fs.readFileSync('config.json')
-  config = JSON.parse(readConfig)
+  const readConfig = JSON.parse(fs.readFileSync('config.json'))
+  config = {
+    prefix : readConfig.prefix,
+    restrictedTo : new Set(readConfig.restrictedTo)
+  }
 
   try {
     const readData = fs.readFileSync('data.json')
@@ -227,35 +230,36 @@ client.on('message', msg => {
       msg.channel.send('**All tags:**', { embed : listEmbed })
 
       break
-    case 'role':
+      case 'role':
 
-      switch (result.modifier) {
-        case 'add':
-          config.restrictedTo = config.restrictedTo.concat(result.name).filter(uniquify)
-
-          const addJson = JSON.stringify(config)
-          fs.writeFile('config.json', addJson, () => { })
-
-          break;
-        case 'remove':
-          config.restrictedTo = config.restrictedTo.filter(e => e !== result.name)
-
-          const removeJson = JSON.stringify(config)
-          fs.writeFile('config.json', removeJson, () => { })
-
-          break;
-        case 'list':
-          break;
-        default:
-          throw `role command received an unexpected modifier from the parser: ${result.modifier}`
-      }
-
-      const roleEmbed = {
-        description: config.restrictedTo.join(', ')
-      }
-      msg.channel.send('**Roles allowed to use this bot (+ Admins):**', { embed: roleEmbed })
-
-      break;
+        switch (result.modifier) {
+          case 'add':
+            config.restrictedTo.add(result.name)
+  
+            const addJson = JSON.stringify({ prefix : config.prefix, restrictedTo : [...config.restrictedTo] })
+             
+            fs.writeFile('config.json', addJson, () => { })
+  
+            break;
+          case 'remove':
+            config.restrictedTo.delete(result.name)
+  
+            const removeJson = JSON.stringify({ prefix : config.prefix, restrictedTo : [...config.restrictedTo] })
+            fs.writeFile('config.json', removeJson, () => { })
+  
+            break;
+          case 'list':
+            break;
+          default:
+            throw `role command received an unexpected modifier from the parser: ${result.modifier}`
+        }
+  
+        const roleEmbed = {
+          description: [...config.restrictedTo].join(', ')
+        }
+        msg.channel.send('**Roles allowed to use this bot (+ Admins):**', { embed: roleEmbed })
+  
+        break;
     case 'not-found':
       msg.channel.send('I did not understand your input. Type `' + prefix + 'help` for help')
       break;
