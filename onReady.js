@@ -7,7 +7,7 @@ function onReady(configPath, dataPath) {
   try {
     const { prefix, restrictedTo } = JSON.parse(fs.readFileSync(configPath))
     config = {
-      prefix,
+      prefix : prefix,
       restrictedTo : new Set(restrictedTo)
     }
   }

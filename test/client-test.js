@@ -143,8 +143,6 @@ describe('OnMessage', () => {
       OnMessage(
         mockMessage(' add [ new-tag , another-new-tag ] new-rec ', false), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
 
-    expect(result).equals('no-prefix')
-
     filesAsBefore(read)
 
   })
@@ -157,8 +155,6 @@ describe('OnMessage', () => {
       OnMessage(
         mockMessage(read.config.prefix + ' add [ new-tag , another-new-tag ] new-rec ', false), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
 
-    expect(result).equals('no-rights')
-      
     filesAsBefore(read)
 
   })

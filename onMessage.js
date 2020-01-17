@@ -1,5 +1,6 @@
 const fs = require('fs')
 const parser = require('./command-parser.js')
+const Discord = require('discord.js')
 
 function recommendationEmbed(id, recommendation) {
   return {
@@ -20,17 +21,17 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
   const prefix = config.prefix
 
   if (!msg.content.startsWith(prefix)) {
-    return 'no-prefix'
+    return { config, recommendations }
   }
 
   if (
-    msg.channel.guild !== null &&
+    !(msg.channel instanceof Discord.DMChannel) &&
     !msg.member.hasPermission('ADMINISTRATOR') &&
     !msg.member.roles.some(role => config.restrictedTo.has(role.name))
   ) {
 
     msg.reply('You do not have the necessary permissions to use this bot.')
-    return 'no-rights'
+    return { config, recommendations }
   }
 
   const content = msg.content.substr(prefix.length, msg.content.length - prefix.length)
