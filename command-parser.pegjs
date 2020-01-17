@@ -1,14 +1,13 @@
 Expression = 
 	HelpCommand /
-    AddCommand / 
+    AddCommand /
     ChangeCommand /
-    RecCommand / 
+    RecCommand /
     RemoveCommand /
     ListCommand /
-    RoleCommand /
-    .* { return { command : "not-found" } }
-
-HelpCommand = _ "help".* { return {command : 'help'}}
+    RoleCommand
+    
+HelpCommand = _ "help" { return {command : 'help'}}
 
 AddCommand = _ "add"_ tags:Tags _ recommendation:Recommendation { 
 	 
@@ -19,7 +18,7 @@ AddCommand = _ "add"_ tags:Tags _ recommendation:Recommendation {
     }
 }
 
-RecCommand = _ "reck" _ tags:Tags _ .* { return { command: "recommend", tags  } } 
+RecCommand = _ "reck" _ tags:Tags { return { command: "recommend", tags  } } 
 
 ChangeCommand = _ "change" _ id:Number _ tags:Tags _ recommendation:Recommendation {
 	return {
@@ -30,14 +29,14 @@ ChangeCommand = _ "change" _ id:Number _ tags:Tags _ recommendation:Recommendati
     }
 }
 
-RemoveCommand = _ "remove" _ id:Number _ { 
+RemoveCommand = _ "remove" _ id:Number { 
   return { 
     command: "remove",
     id
   }
 }
 
-ListCommand = _ "list" _ { return { command: "list" }}
+ListCommand = _ "list" { return { command: "list" }}
 
 RoleCommand = 
   _ "role" _ modifier:( "add" / "remove" ) _ name:Word { 
@@ -46,7 +45,7 @@ RoleCommand =
         modifier,
         name
     }
-} / _ "role" _ "list" { return { command: "role", modifier: "list" }} 
+} / _ "role" _ "list" _ { return { command: "role", modifier: "list" }} 
 
 Tags = "[" _ head:Word _ tail:("," _ Word _)* _ "]" {
 	return [head].concat(tail.map(tag => tag[2]))

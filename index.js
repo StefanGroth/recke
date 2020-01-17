@@ -80,8 +80,14 @@ client.on('message', msg => {
 
   const content = msg.content.substr(prefix.length, msg.content.length - prefix.length)
 
-  const result = parser.parse(content)
-
+  var result = { command : 'not-found'}
+  try {
+    result = parser.parse(content)
+  }
+  catch(e) {
+    result = { command : 'not-found'}
+  }
+  
   switch (result.command) {
     case 'help':
       const helpEmbed = {
