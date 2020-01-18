@@ -3,4 +3,4 @@ data.json
 config.json
 *errorData**
 node_modules/
-.*
+.nyc_output/*
