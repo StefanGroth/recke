@@ -83,47 +83,45 @@ describe('OnMessage', () => {
     }
   }
 
-  function mockMessage(msg, dm = true, role = 'Nobody') {
+  function mockMessage(msg, admin = true, role = 'Nobody') {
 
     class Channel {
-      constructor(dm) {
-        if(dm) {
-          this.guild = null
-        }
-        else {
-          this.guild = 'guild'
-        }
+      constructor() {
+        this.guild = null
       }
 
       send(...params) {
+        console.log()
       }
 
     }
 
     class Member {
-      constructor(role) {
+      constructor(admin, role) {
+        this.admin = admin
         this.roles = [role]
       }
 
       hasPermission(arg) {
-        return false
+        return this.admin
       }
     }
 
     class Message {
 
-      constructor(msg, dm, role) {
+      constructor(msg, admin, role) {
         this.content = msg
-        this.member = new Member(role)
-        this.channel = new Channel(dm)
+        this.member = new Member(admin, { name : role })
+        this.channel = new Channel()
       }
 
       reply(...params) {
+        console.log()
       }
 
     }
 
-    return new Message(msg, dm, role)
+    return new Message(msg, admin, role)
 
   }
 
@@ -141,7 +139,7 @@ describe('OnMessage', () => {
 
     var result = 
       OnMessage(
-        mockMessage(' add [ new-tag , another-new-tag ] new-rec ', false), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
+        mockMessage(' add [ new-tag , another-new-tag ] new-rec '), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
 
     filesAsBefore(read)
 
@@ -158,6 +156,20 @@ describe('OnMessage', () => {
     filesAsBefore(read)
 
   })
+
+  it('should allow users to use the bot if they have a role specified in the restrictions', () => {
+
+    const read = OnReady('test/example-config.json', 'test/example-data.json')
+
+    var result = 
+      OnMessage(
+        mockMessage(read.config.prefix + ' add [ new-tag , another-new-tag ] new-rec ', false, 'OtherRole'), read.config, read.recommendations, configPath, dataPath)
+
+    const onFileData = getData('test/example-data.json')
+    expect(onFileData).to.not.deep.equal(result.recommendations)
+    
+  })
+
 
   it('should correctly add and store recommendations & tags with command add', () => {
 
