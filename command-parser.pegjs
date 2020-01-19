@@ -13,7 +13,7 @@ AddCommand = _ "add"_ tags:Tags _ recommendation:Recommendation {
 	 
 	return { 
     	command: "add",
-    	tags: tags.map(t => t.toLowerCase()),
+    	tags,
       	recommendation
     }
 }
@@ -47,8 +47,12 @@ RoleCommand =
     }
 } / _ "role" _ "list" _ { return { command: "role", modifier: "list" }} 
 
-Tags = "[" _ head:Word _ tail:("," _ Word _)* _ "]" {
+Tags = "[" _ head:Tag _ tail:("," _ Tag _)* _ "]" {
 	return [head].concat(tail.map(tag => tag[2]))
+}
+
+Tag = head:Word tail:(_ Word)* {
+	return [head].concat(tail.map(word => '-' + word[1])).join('').toLowerCase()
 }
 
 Recommendation = rec:.* { return rec.join("") }
@@ -58,3 +62,4 @@ Number = [0-9]+
 
 _ "whitespace"
   = [ \t\n\r]*
+  
