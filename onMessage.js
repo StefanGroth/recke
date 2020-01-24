@@ -40,8 +40,8 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
   try {
     result = parser.parse(content)
   }
-  catch(e) {
-    result = { command : 'not-found'}
+  catch(error) {
+    result = { command : 'not-found', error }
   }
   
   switch (result.command) {
@@ -217,7 +217,7 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
   
         break;
     case 'not-found':
-      msg.channel.send('I did not understand your input. Type `' + prefix + ' help` for help')
+      msg.channel.send('I did not understand your input. Type `' + prefix + ' help` for help\nParser Error: `' + result.error + '`')
       break;
     default:
       throw `Parser returned unexpected result: ${result.command}`
