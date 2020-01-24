@@ -202,7 +202,7 @@ describe('OnMessage', () => {
   it('should correctly change and store recommendations & tags with command change', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
-    
+
     var { recommendations } = OnMessage(mockMessage(read.config.prefix + ' change 1 [ tag ] new-rec '), read.config, read.recommendations, configPath, dataPath)
 
     expect(recommendations.currentID).equal(3)
@@ -222,8 +222,9 @@ describe('OnMessage', () => {
     
     expect(recommendations.values.get(2).tags).to.deep.equal(['tag'])
     expect(recommendations.values.get(2).recommendation).to.equal('new-rec')
-
+    
     const onFileData = getData()
+    
     expect(onFileData).to.deep.equal(recommendations)
 
   })
