@@ -41,14 +41,16 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
 
   const prefix = config.prefix
 
+  if (msg.channel.guild === undefined) {
+    return { config, recommendations }
+  }
+
   if (!msg.content.startsWith(prefix)) {
     return { config, recommendations }
   }
 
   if (
-    !(msg.channel instanceof Discord.DMChannel) &&
-    !msg.member.hasPermission('ADMINISTRATOR') &&
-    !msg.member.roles.some(role => config.restrictedTo.has(role.name))
+    !msg.member.hasPermission('ADMINISTRATOR') && !msg.member.roles.some(role => config.restrictedTo.has(role.name)) 
   ) {
 
     msg.reply('You do not have the necessary permissions to use this bot.')
