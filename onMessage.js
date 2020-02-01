@@ -11,7 +11,15 @@ const ListCommand = require('./commands/List')
 const NotFoundCommand = require('./commands/NotFound')
 const RoleCommand = require('./commands/Role')
 
-const recommendationEmbed = require('./utility/RecommendationEmbed')
+var commandRegister = new Map()
+commandRegister.set('help', HelpCommand)
+commandRegister.set('add', AddCommand)
+commandRegister.set('recommend', RecommendCommand)
+commandRegister.set('change', ChangeCommand)
+commandRegister.set('remove', RemoveCommand)
+commandRegister.set('not-found', NotFoundCommand)
+commandRegister.set('list', ListCommand)
+commandRegister.set('role', RoleCommand)
 
 function createJSON(recommendations) {
   return JSON.stringify({
@@ -19,22 +27,6 @@ function createJSON(recommendations) {
     values: [...recommendations.values],
     tags: [...recommendations.tags]
   }, null, 1)
-}
-
-class CommandRegister {
-
-  constructor() {
-    this.functions = new Map();
-  }
-
-  add(tag, func) {
-    this.functions.set(tag, func)
-  }
-
-  dispatch(tag) {
-    return this.functions.get(tag)
-  }
-
 }
 
 function onMessage(msg, config, recommendations, configPath, dataPath) {
@@ -67,16 +59,6 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
     result = { command: 'not-found', error }
   }
 
-  var register = new CommandRegister()
-  register.add('help', HelpCommand)
-  register.add('add', AddCommand)
-  register.add('recommend', RecommendCommand)
-  register.add('change', ChangeCommand)
-  register.add('remove', RemoveCommand)
-  register.add('not-found', NotFoundCommand)
-  register.add('list', ListCommand)
-  register.add('role', RoleCommand)
-
   var context = {
     config,
     recommendations,
@@ -84,7 +66,7 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
   }
   
   try {
-    var { saveRecs, saveConfig, reply } = register.dispatch(result.command)(context)
+    var { saveRecs, saveConfig, reply } = commandRegister.get(result.command)(context)
   
     if (saveRecs != undefined) {
       const changedJson = createJSON(recommendations)
