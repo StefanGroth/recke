@@ -34,19 +34,18 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
   const prefix = config.prefix
 
   if (msg.channel.guild === undefined) {
-    return { config, recommendations }
+    return
   }
 
   if (!msg.content.startsWith(prefix)) {
-    return { config, recommendations }
+    return
   }
 
   if (
     !msg.member.hasPermission('ADMINISTRATOR') && !msg.member.roles.some(role => config.restrictedTo.has(role.name)) 
   ) {
-
     msg.reply('You do not have the necessary permissions to use this bot.')
-    return { config, recommendations }
+    return
   }
 
   const content = msg.content.substr(prefix.length, msg.content.length - prefix.length)

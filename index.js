@@ -3,21 +3,20 @@ const client = new Discord.Client()
 
 const onReady = require('./onReady.js')
 const onMessage = require('./onMessage.js')
+const backup = require('./utility/backup')
 
-var config = {
-  prefix: '!reck',
-  restrictedTo: new Set()
-}
-
-var recommendations = {
-  currentID: 0,
-  values: new Discord.Collection(),
-  tags: new Set()
-}
+var config = undefined
+var recommendations = undefined
 
 client.on('ready', () => {
 
-  const result = onReady('config.json', 'data.json')
+  const configPath = 'config.json'
+  const dataPath = 'data.json'
+
+  backup(configPath)
+  backup(dataPath)
+
+  const result = onReady(configPath, dataPath)
   config = result.config
   recommendations = result.recommendations
 
@@ -27,9 +26,7 @@ client.on('ready', () => {
 
 client.on('message', (msg) => {
 
-  const result = onMessage(msg, config, recommendations, 'config.json', 'data.json')
-  config = result.config
-  recommendations = result.recommendations
+  onMessage(msg, config, recommendations, 'config.json', 'data.json')
 
 })
 

@@ -1,65 +1,9 @@
-var assert = require('chai').assert
 var expect = require('chai').expect
+
 var OnReady = require('../onReady.js')
 var OnMessage = require('../onMessage.js')
 var Discord = require('discord.js')
 var fs = require('fs')
-
-describe('OnReady', () => {
-
-  it('should fail if no config is given.', () => {
-    assert.throws( () => OnReady('no-config.json', 'no-data.json'), 'ENOENT: no such file or directory, open \'no-config.json\'')
-  })
-  
-  it('should fail if the config can not be parsed.', () => {
-    assert.throws( () => OnReady('test/bad-data', 'no-data.json'), 'Unexpected token C in JSON at position 0')
-  })
-
-  it('should create empty recommendations if the data file can not be found', () => {
-
-    const { recommendations } = OnReady('test/example-config.json', 'test/no-data.json')
-
-    expect(recommendations.currentID).to.equal(0)
-    expect(recommendations.values).to.deep.equal(new Discord.Collection())
-    expect(recommendations.tags).to.deep.equal(new Set())
-
-  })
-
-  it('should create empty recommendations if the data file can not be parsed', () => {
-
-    const { recommendations } = OnReady('test/example-config.json', 'test/bad-data')
-
-    expect(recommendations.currentID).to.equal(0)
-    expect(recommendations.values).to.deep.equal(new Discord.Collection())
-    expect(recommendations.tags).to.deep.equal(new Set())
-
-  })
-
-  it('should read the entries given by the json in the config path', () => {
-
-    const { config } = OnReady('test/example-config.json', 'test/example-data.json')
-
-    expect(config.prefix).to.equal('!reck')
-    expect(config.restrictedTo).to.have.keys('Admin', 'OtherRole')
-    
-  })
-
-  it('should read the entries given by the json in the data path', () => {
-
-    const { recommendations } = OnReady('test/example-config.json', 'test/example-data.json')
-
-    expect(recommendations.currentID).to.equal(3)
-    expect(recommendations.values).to.have.lengthOf(3)
-    expect(recommendations.values).to.have.keys([0, 1, 2])
-    expect(recommendations.values.get(0)).to.deep.equal({ recommendation : '0', tags : ['0'] })
-    expect(recommendations.values.get(1)).to.deep.equal({ recommendation : '1', tags : ['1'] })
-    expect(recommendations.values.get(2)).to.deep.equal({ recommendation : '2', tags : ['2'] })
-    expect(recommendations.tags).to.deep.equal(new Set(['0', '1', '2']))
-    
-  })
-  
-})
-
 
 describe('OnMessage', () => {
 
@@ -125,12 +69,12 @@ describe('OnMessage', () => {
 
   }
 
-  function filesAsBefore(onReadyResult) {
+  function filesAsBefore({ config, recommendations }) {
     const onFileConfig = getConfig('test/example-config.json')
-    expect(onFileConfig).to.deep.equal(onReadyResult.config)
+    expect(onFileConfig).to.deep.equal(config)
     
     const onFileData = getData('test/example-data.json')
-    expect(onFileData).to.deep.equal(onReadyResult.recommendations)
+    expect(onFileData).to.deep.equal(recommendations)
   }
 
   it('should ignore messages without the correct prefix', () => {
