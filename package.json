@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --ignore '*.json' index.js",
+    "pretest": "npm run lint",
     "test": "nyc ./node_modules/mocha/bin/mocha && rm test/*errorData* && rm test/new-*",
-    "generate-config": "node -e 'require(\"./generate-config.js\")(\"config.json\")'"
+    "generate-config": "node -e 'require(\"./generate-config.js\")(\"config.json\")'",
+    "lint": "eslint . --ext .js"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "eslint": "^6.8.0",
     "mocha": "^7.0.0",
     "nyc": "^15.0.0"
   }
