@@ -4,16 +4,12 @@ const Discord = require('discord.js')
 function onReady(configPath, dataPath) {
 
   var config = undefined;
-  try {
-    const { prefix, restrictedTo } = JSON.parse(fs.readFileSync(configPath))
-    config = {
-      prefix : prefix,
-      restrictedTo : new Set(restrictedTo)
-    }
+  const { prefix, restrictedTo } = JSON.parse(fs.readFileSync(configPath))
+  config = {
+    prefix : prefix,
+    restrictedTo : new Set(restrictedTo)
   }
-  catch(error) {
-    throw error
-  }
+
 
   var recommendations = {
     currentID: 0,

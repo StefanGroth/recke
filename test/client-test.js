@@ -184,7 +184,7 @@ describe('OnMessage', () => {
     expect(recommendations.values.get(3).tags).to.deep.equal(['new-tag', 'another-new-tag'])
     expect(recommendations.values.get(3).recommendation).to.equal('new-rec')
 
-    var { recommendations } = OnMessage(mockMessage(read.config.prefix + 'add[new-tag2,another-new-tag2]new-rec'), read.config, read.recommendations, configPath, dataPath)
+    recommendations = OnMessage(mockMessage(read.config.prefix + 'add[new-tag2,another-new-tag2]new-rec'), read.config, read.recommendations, configPath, dataPath).recommendations
 
     expect(recommendations.currentID).equal(5)
     expect(recommendations.values).to.deep.include.keys(4)
@@ -213,7 +213,7 @@ describe('OnMessage', () => {
     expect(recommendations.values.get(1).tags).to.deep.equal(['tag'])
     expect(recommendations.values.get(1).recommendation).to.equal('new-rec')
 
-    var { recommendations } = OnMessage(mockMessage(read.config.prefix + 'change2[tag]new-rec'), read.config, read.recommendations, configPath, dataPath)
+    recommendations = OnMessage(mockMessage(read.config.prefix + 'change2[tag]new-rec'), read.config, read.recommendations, configPath, dataPath).recommendations
 
     expect(recommendations.currentID).equal(3)
     
@@ -250,7 +250,7 @@ describe('OnMessage', () => {
 
     expect(recommendations).to.not.deep.have.keys(2)
 
-    var { recommendations } = OnMessage(mockMessage(read.config.prefix + ' remove1'), read.config, read.recommendations, configPath, dataPath)
+    recommendations = OnMessage(mockMessage(read.config.prefix + ' remove1'), read.config, read.recommendations, configPath, dataPath).recommendations
 
     expect(recommendations).to.not.deep.have.keys(1)
 
@@ -280,7 +280,7 @@ describe('OnMessage', () => {
 
     expect(config.restrictedTo).to.have.keys('Admin','NewRole','OtherRole')
 
-    var { config } = OnMessage(mockMessage(read.config.prefix + 'roleaddAnotherNewRole'), read.config, read.recommendations, configPath, dataPath)
+    config = OnMessage(mockMessage(read.config.prefix + 'roleaddAnotherNewRole'), read.config, read.recommendations, configPath, dataPath).config
 
     expect(config.restrictedTo).to.have.keys('Admin','AnotherNewRole','NewRole','OtherRole')
 
@@ -297,7 +297,7 @@ describe('OnMessage', () => {
 
     expect(config.restrictedTo).to.not.have.keys('Admin')
 
-    var { config } = OnMessage(mockMessage(read.config.prefix + 'roleremoveOtherRole'), read.config, read.recommendations, configPath, dataPath)
+    config = OnMessage(mockMessage(read.config.prefix + 'roleremoveOtherRole'), read.config, read.recommendations, configPath, dataPath).config
 
     expect(config.restrictedTo).to.not.have.keys('Admin', 'OtherRole')
 

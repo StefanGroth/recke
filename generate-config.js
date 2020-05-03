@@ -1,7 +1,9 @@
+const fs = require('fs')
+
 function generate(path) {
 
   const config = {
-    prefix : "!reck",
+    prefix : '!reck',
     restrictedTo : new Set()
   }
   
