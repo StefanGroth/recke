@@ -57,7 +57,7 @@ Tag = head:Word tail:(_ Word)* {
 
 Recommendation = rec:.* { return rec.join("") }
 Word = char:Char+ { return char.join("") }
-Char = [a-zA-Z0-9-_]
+Char = [^ \t\n\r,\[\]]
 Number = [0-9]+ { return parseInt(text(), 10) }
 
 _ "whitespace"
