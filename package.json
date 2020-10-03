@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --ignore '*.json' index.js",
-    "pretest": "npm run lint",
-    "test": "nyc ./node_modules/mocha/bin/mocha && rm test/*errorData* && rm test/new-*",
+    "prestart": "pegjs command-parser.pegjs",
+    "pretest": "npm run lint && pegjs command-parser.pegjs",
+    "test": "nyc mocha && rm test/*errorData* && rm test/new-*",
     "generate-config": "node -e 'require(\"./generate-config.js\")(\"config.json\")'",
     "lint": "eslint . --ext .js"
   },
@@ -14,15 +15,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/uws": "^10.149.0",
     "bufferutil": "^4.0.1",
-    "discord.js": "^11.5.1",
-    "erlpack": "github:discordapp/erlpack",
-    "libsodium-wrappers": "^0.7.6",
-    "node-opus": "^0.2.9",
+    "discord.js": "^12.3.1",
+    "erlpack": "github:discord/erlpack",
     "nodemon": "^2.0.2",
-    "opusscript": "0.0.6",
-    "sodium": "^2.0.3"
+    "utf-8-validate": "^5.0.2",
+    "zlib-sync": "^0.1.7",
+    "pegjs": "^0.10.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",

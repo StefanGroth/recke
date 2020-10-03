@@ -1,7 +1,7 @@
 auth.json
 data.json
 config.json
-package-lock.json
+command-parser.js
 *errorData**
 node_modules/
 .nyc_output/*
