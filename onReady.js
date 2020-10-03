@@ -3,19 +3,15 @@ const Discord = require('discord.js')
 
 function onReady(configPath, dataPath) {
 
-  var config = undefined;
-  try {
-    const { prefix, restrictedTo } = JSON.parse(fs.readFileSync(configPath))
-    config = {
-      prefix : prefix,
-      restrictedTo : new Set(restrictedTo)
-    }
-  }
-  catch(error) {
-    throw error
+  let config = undefined;
+  const { prefix, restrictedTo } = JSON.parse(fs.readFileSync(configPath))
+  config = {
+    prefix : prefix,
+    restrictedTo : new Set(restrictedTo)
   }
 
-  var recommendations = {
+
+  let recommendations = {
     currentID: 0,
     values: new Discord.Collection(),
     tags: new Set()

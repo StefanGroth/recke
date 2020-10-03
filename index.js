@@ -4,12 +4,12 @@ const client = new Discord.Client()
 const onReady = require('./onReady.js')
 const onMessage = require('./onMessage.js')
 
-var config = {
+let config = {
   prefix: '!reck',
   restrictedTo: new Set()
 }
 
-var recommendations = {
+let recommendations = {
   currentID: 0,
   values: new Discord.Collection(),
   tags: new Set()

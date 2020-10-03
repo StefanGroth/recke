@@ -1,0 +1,16 @@
+{
+  "env": {
+    "es6": true,
+    "node" : true,
+    "mocha": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "quotes": ["error", "single"],
+    "no-unused-vars": ["warn", { "args": "none" }],
+    "no-var": "warn"
+  }
+}
