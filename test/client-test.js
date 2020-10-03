@@ -1,9 +1,9 @@
-var assert = require('chai').assert
-var expect = require('chai').expect
-var OnReady = require('../onReady.js')
-var OnMessage = require('../onMessage.js')
-var Discord = require('discord.js')
-var fs = require('fs')
+let assert = require('chai').assert
+let expect = require('chai').expect
+let OnReady = require('../onReady.js')
+let OnMessage = require('../onMessage.js')
+let Discord = require('discord.js')
+let fs = require('fs')
 
 describe('OnReady', () => {
 
@@ -137,9 +137,8 @@ describe('OnMessage', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
 
-    var result = 
-      OnMessage(
-        mockMessage(' add [ new-tag , another-new-tag ] new-rec '), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
+    OnMessage(
+      mockMessage(' add [ new-tag , another-new-tag ] new-rec '), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
 
     filesAsBefore(read)
 
@@ -149,9 +148,8 @@ describe('OnMessage', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
 
-    var result = 
-      OnMessage(
-        mockMessage(read.config.prefix + ' add [ new-tag , another-new-tag ] new-rec ', false), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
+    OnMessage(
+      mockMessage(read.config.prefix + ' add [ new-tag , another-new-tag ] new-rec ', false), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
 
     filesAsBefore(read)
 
@@ -161,7 +159,7 @@ describe('OnMessage', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
 
-    var result = 
+    let result = 
       OnMessage(
         mockMessage(read.config.prefix + ' add [ new-tag , another-new-tag ] new-rec ', false, 'OtherRole'), read.config, read.recommendations, configPath, dataPath)
 
@@ -175,7 +173,7 @@ describe('OnMessage', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
     
-    var { recommendations } = OnMessage(mockMessage(read.config.prefix + ' add [ new-tag , another-new-tag ] new-rec '), read.config, read.recommendations, configPath, dataPath)
+    let { recommendations } = OnMessage(mockMessage(read.config.prefix + ' add [ new-tag , another-new-tag ] new-rec '), read.config, read.recommendations, configPath, dataPath)
 
     expect(recommendations.currentID).equal(4)
     expect(recommendations.values).to.deep.include.keys(3)
@@ -203,7 +201,7 @@ describe('OnMessage', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
 
-    var { recommendations } = OnMessage(mockMessage(read.config.prefix + ' change 1 [ tag ] new-rec '), read.config, read.recommendations, configPath, dataPath)
+    let { recommendations } = OnMessage(mockMessage(read.config.prefix + ' change 1 [ tag ] new-rec '), read.config, read.recommendations, configPath, dataPath)
 
     expect(recommendations.currentID).equal(3)
     
@@ -233,7 +231,7 @@ describe('OnMessage', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
     
-    var { config, recommendations } = OnMessage(mockMessage(read.config.prefix + 'change 42 [tag] new-rec'), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
+    let { config, recommendations } = OnMessage(mockMessage(read.config.prefix + 'change 42 [tag] new-rec'), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
 
     expect(read.config).to.be.deep.equal(config)
     expect(read.recommendations).to.be.deep.equal(recommendations)
@@ -246,7 +244,7 @@ describe('OnMessage', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
     
-    var { recommendations } = OnMessage(mockMessage(read.config.prefix + ' remove 2'), read.config, read.recommendations, configPath, dataPath)
+    let { recommendations } = OnMessage(mockMessage(read.config.prefix + ' remove 2'), read.config, read.recommendations, configPath, dataPath)
 
     expect(recommendations).to.not.deep.have.keys(2)
 
@@ -263,7 +261,7 @@ describe('OnMessage', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
     
-    var { config, recommendations } = OnMessage(mockMessage(read.config.prefix + 'remove 42'), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
+    let { config, recommendations } = OnMessage(mockMessage(read.config.prefix + 'remove 42'), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
 
     expect(read.config).to.be.deep.equal(config)
     expect(read.recommendations).to.be.deep.equal(recommendations)
@@ -276,7 +274,7 @@ describe('OnMessage', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
     
-    var { config } = OnMessage(mockMessage(read.config.prefix + ' role add NewRole'), read.config, read.recommendations, configPath, dataPath)
+    let { config } = OnMessage(mockMessage(read.config.prefix + ' role add NewRole'), read.config, read.recommendations, configPath, dataPath)
 
     expect(config.restrictedTo).to.have.keys('Admin','NewRole','OtherRole')
 
@@ -293,7 +291,7 @@ describe('OnMessage', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
     
-    var { config } = OnMessage(mockMessage(read.config.prefix + ' role remove Admin'), read.config, read.recommendations, configPath, dataPath)
+    let { config } = OnMessage(mockMessage(read.config.prefix + ' role remove Admin'), read.config, read.recommendations, configPath, dataPath)
 
     expect(config.restrictedTo).to.not.have.keys('Admin')
 
@@ -310,7 +308,7 @@ describe('OnMessage', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
     
-    var { config, recommendations } = OnMessage(mockMessage(read.config.prefix + ' role remove NonExitant'), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
+    let { config, recommendations } = OnMessage(mockMessage(read.config.prefix + ' role remove NonExitant'), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
 
     expect(read.config).to.be.deep.equal(config)
     expect(read.recommendations).to.be.deep.equal(recommendations)
@@ -322,7 +320,7 @@ describe('OnMessage', () => {
   it('should allow requesting help', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
-    var { config, recommendations } = OnMessage(mockMessage(read.config.prefix + 'help'), read.config, read.recommendations, configPath, dataPath)
+    let { config, recommendations } = OnMessage(mockMessage(read.config.prefix + 'help'), read.config, read.recommendations, configPath, dataPath)
     expect(read.config).to.be.deep.equal(config)
     expect(read.recommendations).to.be.deep.equal(recommendations)
 
@@ -331,7 +329,7 @@ describe('OnMessage', () => {
   it('should allow listing all tags', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
-    var { config, recommendations } = OnMessage(mockMessage(read.config.prefix + 'list'), read.config, read.recommendations, configPath, dataPath)
+    let { config, recommendations } = OnMessage(mockMessage(read.config.prefix + 'list'), read.config, read.recommendations, configPath, dataPath)
     expect(read.config).to.be.deep.equal(config)
     expect(read.recommendations).to.be.deep.equal(recommendations)
 
@@ -341,7 +339,7 @@ describe('OnMessage', () => {
   it('should allow listing all roles that are allowed to use this bot', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
-    var { config, recommendations } = OnMessage(mockMessage(read.config.prefix + 'role list'), read.config, read.recommendations, configPath, dataPath)
+    let { config, recommendations } = OnMessage(mockMessage(read.config.prefix + 'role list'), read.config, read.recommendations, configPath, dataPath)
     expect(read.config).to.be.deep.equal(config)
     expect(read.recommendations).to.be.deep.equal(recommendations)
 
@@ -351,7 +349,7 @@ describe('OnMessage', () => {
 
     const read = OnReady('test/example-config.json', 'test/example-data.json')
     
-    var { config, recommendations } = OnMessage(mockMessage(read.config.prefix + ' no-command'), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
+    let { config, recommendations } = OnMessage(mockMessage(read.config.prefix + ' no-command'), read.config, read.recommendations, 'test/example-config.json', 'test/example-data.json')
 
     expect(read.config).to.deep.equal(config)
     expect(read.recommendations).to.deep.equal(recommendations)

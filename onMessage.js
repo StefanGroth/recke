@@ -1,6 +1,5 @@
 const fs = require('fs')
 const parser = require('./command-parser')
-const Discord = require('discord.js')
 
 const HelpCommand = require('./commands/Help')
 const AddCommand = require('./commands/Add')
@@ -10,8 +9,6 @@ const RemoveCommand = require('./commands/Remove')
 const ListCommand = require('./commands/List')
 const NotFoundCommand = require('./commands/NotFound')
 const RoleCommand = require('./commands/Role')
-
-const recommendationEmbed = require('./utility/RecommendationEmbed')
 
 function createJSON(recommendations) {
   return JSON.stringify({
@@ -59,7 +56,7 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
 
   const content = msg.content.substr(prefix.length, msg.content.length - prefix.length)
 
-  var result = { command: 'not-found' }
+  let result = { command: 'not-found' }
   try {
     result = parser.parse(content)
   }
@@ -67,7 +64,7 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
     result = { command: 'not-found', error }
   }
 
-  var register = new CommandRegister()
+  let register = new CommandRegister()
   register.add('help', HelpCommand)
   register.add('add', AddCommand)
   register.add('recommend', RecommendCommand)
@@ -77,14 +74,14 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
   register.add('list', ListCommand)
   register.add('role', RoleCommand)
 
-  var context = {
+  let context = {
     config,
     recommendations,
     result,
   }
   
   try {
-    var { saveRecs, saveConfig, reply } = register.dispatch(result.command)(context)
+    let { saveRecs, saveConfig, reply } = register.dispatch(result.command)(context)
   
     if (saveRecs != undefined) {
       const changedJson = createJSON(recommendations)
