@@ -47,7 +47,7 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
   }
 
   if (
-    !msg.member.hasPermission('ADMINISTRATOR') && !msg.member.roles.some(role => config.restrictedTo.has(role.name)) 
+    !msg.member.hasPermission('ADMINISTRATOR') && !msg.member.roles.cache.some(role => config.restrictedTo.has(role.name)) 
   ) {
 
     msg.reply('You do not have the necessary permissions to use this bot.')
