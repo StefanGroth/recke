@@ -96,10 +96,16 @@ describe('OnMessage', () => {
 
     }
 
+    class Roles {
+      constructor(role) {
+        this.cache = [role]
+      }
+    }
+
     class Member {
       constructor(admin, role) {
         this.admin = admin
-        this.roles = [role]
+        this.roles = new Roles(role)
       }
 
       hasPermission(arg) {
