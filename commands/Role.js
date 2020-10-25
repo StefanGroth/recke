@@ -1,4 +1,4 @@
-function handle({ config, result }) {
+function handle({ msg, config, result }) {
 
   switch (result.modifier) {
     case 'add':
@@ -17,9 +17,10 @@ function handle({ config, result }) {
     description: [...config.restrictedTo].join(', ')
   }
 
+  msg.channel.send('**Roles allowed to use this bot (+ Admins):**', { embed: roleEmbed })
+
   return {
     saveConfig : result.modifier == 'list' ? undefined : Symbol(),
-    reply : (msg) => msg.channel.send('**Roles allowed to use this bot (+ Admins):**', { embed: roleEmbed })
   }
 
 }

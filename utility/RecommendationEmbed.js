@@ -1,6 +1,6 @@
-function recommendationEmbed(id, recommendation) {
+function recommendationEmbed(recommendation) {
   return {
-    description: `**ID:** ${id}\n **Tags:** [` + recommendation.tags.join(', ') + `]\n**Recommendation:**\n ${recommendation.recommendation}`
+    description: `**ID:** ${recommendation.id}\n **Tags:** [` + recommendation.tags.join(', ') + `]\n**Recommendation:**\n ${recommendation.recommendation}`
   }
 }
 

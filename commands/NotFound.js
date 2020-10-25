@@ -1,11 +1,9 @@
 
-function handle({ config, result }) {
+function handle({ msg, config, result }) {
 
-  return {
-    reply: (msg) => {
-      msg.channel.send('I did not understand your input. Type `' + config.prefix + ' help` for help\nParser Error: `' + result.error + '`')
-    }
-  }
+  msg.channel.send('I did not understand your input. Type `' + config.prefix + ' help` for help\nParser Error: `' + result.error + '`')
+
+  return {}
 
 }
 

@@ -1,27 +1,20 @@
 const recommendationEmbed = require('../utility/RecommendationEmbed')
 
-function handle({ recommendations, result }) {
+async function handle({ msg, Recommendation, result }) {
 
-  const filtered = recommendations.values.filter(element => {
-    return element.tags.filter(e => result.tags.includes(e)).length === result.tags.length
+  const found = await Recommendation.find({
+    tags : { $all : result.tags }
   })
-
-  if (filtered.size === 0) {
-    return { 
-      reply: (msg) => {
-        msg.channel.send('Could not find any recommendation that contains all requested tags.')
-      }
-    }
+    
+  if (found.length === 0) {
+    msg.channel.send('Could not find any recommendation that contains all requested tags.')
+  }
+  else {
+    const entry = found[Math.floor(Math.random() * found.length)];
+    msg.channel.send('**How about**:', { embed: recommendationEmbed(entry) })
   }
 
-  const randomKey = filtered.randomKey()
-  const randomEntry = filtered.get(randomKey)
-
-  return {
-    reply: (msg) => {
-      msg.channel.send('**How about**:', { embed: recommendationEmbed(randomKey, randomEntry) })
-    }
-  }
+  return {}
 
 }
 

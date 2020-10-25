@@ -34,16 +34,15 @@ class CommandRegister {
 
 }
 
-function onMessage(msg, config, recommendations, configPath, dataPath) {
+function onMessage(msg, config, Recommendation, MaxId, configPath, dataPath) {
 
   const prefix = config.prefix
 
   if (msg.channel.guild === undefined) {
-    return { config, recommendations }
+    return config
   }
-
   if (!msg.content.startsWith(prefix)) {
-    return { config, recommendations }
+    return config
   }
 
   if (
@@ -51,7 +50,7 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
   ) {
 
     msg.reply('You do not have the necessary permissions to use this bot.')
-    return { config, recommendations }
+    return config
   }
 
   const content = msg.content.substr(prefix.length, msg.content.length - prefix.length)
@@ -75,31 +74,25 @@ function onMessage(msg, config, recommendations, configPath, dataPath) {
   register.add('role', RoleCommand)
 
   let context = {
+    msg,
     config,
-    recommendations,
+    Recommendation,
+    MaxId,
     result,
   }
   
   try {
-    let { saveRecs, saveConfig, reply } = register.dispatch(result.command)(context)
-  
-    if (saveRecs != undefined) {
-      const changedJson = createJSON(recommendations)
-      fs.writeFileSync(dataPath, changedJson)
-    }
+    let { saveConfig } = register.dispatch(result.command)(context)
     if (saveConfig != undefined) {
       const configJson = JSON.stringify({ prefix: config.prefix, restrictedTo: [...config.restrictedTo] })
       fs.writeFileSync(configPath, configJson)
     }
-
-    reply(msg)
-
   }
   catch(error) {
     throw 'Unexpected Parser Result: ' + error
   }
 
-  return { config, recommendations }
+  return config
 
 }
 

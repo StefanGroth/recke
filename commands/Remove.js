@@ -1,23 +1,12 @@
-function handle({ recommendations, result }) {
+async function handle({ msg, Recommendation, result }) {
 
   const removeID = parseInt(result.id)
 
-  if (!recommendations.values.has(removeID)) {
-    return {
-      reply : (msg) => msg.channel.send(`ID ${removeID} not found.`)
-    }
-  }
+  await Recommendation.deleteOne({ id: removeID })
+  
+  msg.channel.send(`**Removed ID ${removeID}.**`)
 
-  recommendations.values.delete(removeID)
-
-  recommendations.tags = new Set(
-    recommendations.values.map((value) => { return value.tags }).reduce((accumulator, value) => { return accumulator.concat(value) }, [])
-  )
-
-  return { 
-    saveRecs : Symbol(),
-    reply: (msg) => msg.channel.send(`**Removed ID ${removeID}.**`)
-  }
+  return { }
 
 }
 

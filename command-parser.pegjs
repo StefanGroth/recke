@@ -24,7 +24,7 @@ ChangeCommand = _ "change" _ id:Number _ tags:Tags _ recommendation:Recommendati
 	return {
     	command: "change",
         id,
-        tags: tags.map(t => t.toLowerCase()),
+        tags: tags,
       	recommendation
     }
 }

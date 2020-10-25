@@ -1,4 +1,4 @@
-function handle({ config }) {
+function handle({ msg, config }) {
 
   const prefix = config.prefix
 
@@ -38,8 +38,10 @@ function handle({ config }) {
       }
     ]
   }
+  
+  msg.channel.send({ embed: helpEmbed })
 
-  return { reply : (msg) => { msg.channel.send({ embed: helpEmbed }) } }
+  return {}
 
 }
 

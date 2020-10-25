@@ -1,13 +1,16 @@
-function handle({ recommendations }) {
+function handle({ msg, Recommendation }) {
 
-  const listEmbed = {
-    description: [...recommendations.tags].join(', ')
-  }
+  Recommendation.distinct('tags', (err, result) => {
 
-  return {
-    reply: (msg) => msg.channel.send('**All tags:**', { embed : listEmbed })
-  }
+    console.log(result)
+    msg.channel.send('**All tags:**', {
+      embed:
+        { description: result.join(', ') }
+    })
 
+  })
+
+  return {}
 }
 
 module.exports = handle

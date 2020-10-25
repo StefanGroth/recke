@@ -1,28 +1,23 @@
 const recommendationEmbed = require('../utility/RecommendationEmbed')
 
-function handle({ recommendations, result }) {
+async function handle({ msg, Recommendation, MaxId, result }) {
 
-  const newID = recommendations.currentID
-  recommendations.currentID = recommendations.currentID + 1
+  const newID = await MaxId.findOneAndUpdate({}, {$inc : { value : 1}}, { useFindAndModify: false})
 
-  recommendations.values.set(
-    newID,
-    { tags: result.tags, recommendation: result.recommendation.trim() }
+  console.log(newID)
+
+  const addResult = await Recommendation.create(
+    {
+      id : newID.value,
+      tags: result.tags,
+      recommendation : result.recommendation.trim()
+    }
   )
 
-  result.tags.forEach(element => {
-    recommendations.tags.add(element)
-  });
-
-  return {
-    saveRecs : Symbol(),
-    reply : (msg) => {
-      const newEntry = recommendations.values.get(newID)
-      msg.channel.send('**Added** :+1:', { embed: recommendationEmbed(newID, newEntry) })
-    }
-  }
-
+  console.log(addResult)
   
+  msg.channel.send('**Added** :+1:', { embed: recommendationEmbed(addResult) })
+
 }
 
 module.exports = handle
